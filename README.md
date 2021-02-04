@@ -1,2 +1,2 @@
 # ab-testing
-This repository collects all ab-testing relevant scripts I've written.
+This repository collects all A/B testing relevant scripts I've written.

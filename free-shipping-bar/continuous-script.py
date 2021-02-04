@@ -69,7 +69,7 @@ df_test = df_test.merge(df_rev_new, how = 'left', on = ['SessionID', 'Date', 'Co
 df_test['TotalRevenue'] = df_test['TotalRevenue'].fillna(0)
 df_test['TotalRevenue_sq'] = df_test['TotalRevenue_sq'].fillna(0)
 
-#overwrite revenue data as array format again for the following a/b test
+#overwrite revenue data as array format again for the following mann whitney method
 control_rev = df_test[df_test['ControlGroup'] == 1]['TotalRevenue'].array
 var_rev = df_test[df_test['ControlGroup'] == 0]['TotalRevenue'].array
 
@@ -111,7 +111,7 @@ def z_test_calculator_continuous (df, denominator, numerator, numerator_sq):
 
 
 #define ab test calculator for continuous distribution(revenue)
-def ab_test_calculator_rev (df, data_type):
+def ab_test_calculator_rev (df, data_type): #df = df_test, data_type = ['SessionID', 'CusID']
     
     #integrate all necesary input data into df_result by using loop
     metrics = ['SawProduct', 'Bounced', 'AddedToCart', 'ReachedCheckout', 'Converted']
@@ -152,7 +152,7 @@ def ab_test_calculator_rev (df, data_type):
 
 
 #define reference line tool to realize automation
-def reference_line_rev(df, denominator, data_type):
+def reference_line_rev(df, denominator, data_type): #df = df_test, denominator = ['SessionID'~'Converted'], data_type = ['SessionID', 'CusID']
     
     #get daily data for denominator
     if denominator == data_type:
@@ -214,7 +214,7 @@ def reference_line_rev(df, denominator, data_type):
 # # A/B Test (Continuous) w/ cut 
 #from here we define a series of a/b test w/ cut automated functions in similar logic as the above
 #define ab test calculator applied to cut
-def ab_test_calculator_rev_cut (df, data_type, cut):
+def ab_test_calculator_rev_cut (df, data_type, cut): #df = df_test, data_type = ['SessionID', 'CusID'], cut = ['CategoryID', 'VisitorType', 'Channel Name']
     
     dic_final_rev = {}
     
@@ -262,7 +262,7 @@ def ab_test_calculator_rev_cut (df, data_type, cut):
     return dic_final_rev
 
 #define reference line tool applied to cut
-def reference_line_rev_cut(df, denominator, data_type, cut):
+def reference_line_rev_cut(df, denominator, data_type, cut): #df = df_test, denominator = ['SawProduct'~'Converted'], data_type = ['SessionID', 'CusID'], cut = ['CategoryID', 'VisitorType', 'Channel Name']
     
     df_copy = df.copy()
     
@@ -329,9 +329,9 @@ def reference_line_rev_cut(df, denominator, data_type, cut):
         ax[j].set_title(data_type + '_' + denominator + '_' + cut + '_' + str(p))
         ax[j].set_xlabel('date')
         ax[j].set_ylabel('sig_level')
-        y_major_locator = MultipleLocator(0.05) #将每个刻度间隔设置为0.05
+        y_major_locator = MultipleLocator(0.05) #set scale interval as 0.05 for the plot
         ax[j].yaxis.set_major_locator(y_major_locator)
         
         j = j + 1
 
-    return ax
+    return 

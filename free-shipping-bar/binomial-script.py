@@ -56,7 +56,7 @@ def z_test_calculator (df, denominator, numerator):
 
 # # A/B Test (Binomial)
 #define ab test calculator by using some loops to save analysis execution time
-def ab_test_calculator (df, data_type):
+def ab_test_calculator (df, data_type): #df = df_test, data_type = ['SessionID', 'CusID']
 
     #integrate all necesary input data into df_result by using loop
     metrics = ['SawProduct', 'Bounced', 'AddedToCart', 'ReachedCheckout', 'Converted']
@@ -97,7 +97,7 @@ def ab_test_calculator (df, data_type):
     return df_final
 
 #define reference line tool to realize automation
-def reference_line(df, denominator, numerator, data_type):
+def reference_line(df, denominator, numerator, data_type): #df = df_test, denominator/numerator = ['SessionID'~'Converted'], data_type = ['SessionID', 'CusID']
     
     #get daily data for denominator
     if denominator == data_type:
@@ -152,7 +152,7 @@ def reference_line(df, denominator, numerator, data_type):
 # # A/B Test (Binomial) w/ cut
 #from here we define a series of a/b test w/ cut automated functions in similar logic as the above
 #define ab test calculator applied to cut
-def ab_test_calculator_cut (df, data_type, cut):
+def ab_test_calculator_cut (df, data_type, cut): #df = df_test, data_type = ['SessionID', 'CusID'], cut = ['CategoryID', 'VisitorType', 'Channel Name']
     
     dic_final = {}
     df_cut = df.copy()
@@ -202,7 +202,7 @@ def ab_test_calculator_cut (df, data_type, cut):
 
 
 #define reference line tool applied to cut
-def reference_line_cut(df, denominator, numerator, data_type, cut):
+def reference_line_cut(df, denominator, numerator, data_type, cut): #df = df_test, denominator/numerator = ['SawProduct'~'Converted'], data_type = ['SessionID', 'CusID'], cut = ['CategoryID', 'VisitorType', 'Channel Name']
     
     dic_cumsum = {}
     

@@ -92,7 +92,7 @@ testDF = pd.DataFrame(testDataDict)
 (U, s, Vh) = np.linalg.svd(trainDF-np.mean(trainDF))
 
 #plot the energy chart to see how many sigvals we should have to get the optimal result
-s2 = np.power(s,2)
+s2 = np.power(s, 2)
 spectrum = np.cumsum(s2) / np.sum(s2)
 
 plt.plot(spectrum)
@@ -106,17 +106,19 @@ plt.ylabel("Energy")
 plt.title("Singular Value Spectrum")
 
 #modeling
+#build the model structure with determined amount of singvals and other basic info such as M, predictkey, etc.
+#len(trainDF) is the length of training duration in specific units e.g.in this case are 24 months
 singvals = 2
-rscModel = RobustSyntheticControl(PredictKeyCountry, singvals,len(trainDF),1,modelType='svd',
-                                  svdMethod = 'numpy', otherSeriesKeysArray = OtherCountry)
+rscModel = RobustSyntheticControl(PredictKeyCountry, singvals, len(trainDF), 1, modelType='svd', svdMethod = 'numpy', otherSeriesKeysArray = OtherCountry) 
 
+#fit the model with training data
 rscModel.fit(trainDF)
 denoiseDF = rscModel.model.denoisedDF()
 
-
 #output the data we need by inputting correspoding data into the model
+#the model is like a black box, it chose 2 other countries, but we don't know which 2, so we just need to input all OtherCountry and let it choose again
 actual = df.loc[PredictKeyCountry]
-model_fit = np.dot(trainDF[OtherCountry][:], rscModel.model.weights)
+model_fit = np.dot(trainDF[OtherCountry][:], rscModel.model.weights) 
 predictions = []
 predictions = np.dot(testDF[OtherCountry], rscModel.model.weights)
 
@@ -132,11 +134,11 @@ ax.set_xticklabels(label_markings, rotation = 90)
 ax.set_xticklabels(label_markings)
 ax.xaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
 
-plt.plot(month, actual ,label = 'actual') #画出真实值
+plt.plot(month, actual ,label = 'actual') #plot the actual data
 plt.xlabel('Month')
 plt.ylabel('Visitor')
-plt.plot(trainingMonth, model_fit, label='fitted model') #画出training阶段的fitted model
-plt.plot(testMonth, predictions, label='counterfactual') #画出test阶段的预测线条
+plt.plot(trainingMonth, model_fit, label='fitted model') #plot trainingMonth fitted model
+plt.plot(testMonth, predictions, label='counterfactual') #plot testMonth prediction
 plt.title(PredictKeyCountry+', Singular Values used: '+str(singvals))
 
 # xposition = pd.to_datetime(MonthTrainEnd,  errors='coerce')
